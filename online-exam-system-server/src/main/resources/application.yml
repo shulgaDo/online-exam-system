@@ -7,4 +7,14 @@ spring:
     url: jdbc:mysql://localhost:3306/examsys?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: 913812
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
 
+jwt:
+  secret: VKKyKYs5ciPr70qepij8XokSbyXpi8O14TLTZveb4Tk
+  expiration: 3600000
+  header: Authorization
+  prefix: Bearer
