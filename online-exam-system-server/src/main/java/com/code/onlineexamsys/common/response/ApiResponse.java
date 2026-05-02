@@ -60,6 +60,21 @@ public class ApiResponse<T> {
         return new ApiResponse<>(responseCode.getCode(),responseCode.getMessage(),null);
     }
 
+    public static <T> ApiResponse<T> failed(ErrorCode errorCode){
+        return new ApiResponse<>(errorCode.getCode(),errorCode.getErrorMessage(),null);
+    }
+
+
+    /**
+     * 返回错误信息
+     * @param errorMessage
+     * @return
+     * @param <T>
+     */
+    public static <T> ApiResponse<T> failed(String errorMessage){
+        return new ApiResponse<>(ResponseCode.FAILED.getCode(), errorMessage,null);
+    }
+
 
 
 

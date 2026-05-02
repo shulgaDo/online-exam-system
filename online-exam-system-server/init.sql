@@ -3,7 +3,7 @@ CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('student', 'teacher', 'admin') NOT NULL,
+--     role ENUM('student', 'teacher', 'admin') NOT NULL,
     email VARCHAR(100),
     phone VARCHAR(20),
     status TINYINT DEFAULT 1,
@@ -154,3 +154,31 @@ CREATE TABLE password_resets (
     token VARCHAR(255),
     expire_time DATETIME
 );
+
+-- 角色表
+CREATE TABLE `roles`  (
+                          `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                          `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                          `description` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                          PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- 用户角色关联表
+CREATE TABLE `user_roles`  (
+                               `user_id` bigint(20) NOT NULL,
+                               `role_id` bigint(20) NOT NULL,
+                               PRIMARY KEY (`user_id`, `role_id`) USING BTREE,
+                               INDEX `role_id`(`role_id` ASC) USING BTREE,
+                               CONSTRAINT `role_id` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                               CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- 权限表
+CREATE TABLE `permissions`  (
+                                `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+                                `description` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+                                PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+

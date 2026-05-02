@@ -33,7 +33,7 @@ public class JwtUtil {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(secretKey)
+                .signWith(secretKey,SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -50,7 +50,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
                 .setSubject(account)
-                .signWith(secretKey)
+                .signWith(secretKey,SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -111,7 +111,7 @@ public class JwtUtil {
      * @return
      */
     public String resolveToken(String token){
-        if(token != null && !token.startsWith(jwtProperties.getPrefix())){
+        if(token != null && token.startsWith(jwtProperties.getPrefix())){
             return token.substring(jwtProperties.getPrefix().length()).trim();
         }
         return null;
