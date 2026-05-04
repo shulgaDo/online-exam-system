@@ -1,12 +1,16 @@
 package com.code.onlineexamsys.model.vo;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponseVO {
 
-    private String username;
+    private String token;
 
-    private List<String> roles;
+    private UserInfoVO userinfoVO;
 
-    private List<String> permissions;
 }
