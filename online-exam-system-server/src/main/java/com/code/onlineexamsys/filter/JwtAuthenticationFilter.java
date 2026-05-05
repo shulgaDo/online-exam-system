@@ -1,6 +1,8 @@
 package com.code.onlineexamsys.filter;
 
 import com.code.onlineexamsys.common.properties.JwtProperties;
+import com.code.onlineexamsys.exception.BusinessException;
+import com.code.onlineexamsys.service.TokenService;
 import com.code.onlineexamsys.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,6 +32,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private TokenService tokenService;
+
 //    private static final List<String> WHITELIST = List.of(
 //            "/swagger-ui",
 //            "/swagger-ui.html",
@@ -49,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //        }
 
         if(authHeader != null && authHeader.startsWith("Bearer ")){
-            String token = authHeader.substring(7);
+            String token = authHeader.substring(7).trim();
             String username = jwtUtil.extractUsername(token);
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -60,7 +65,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
+            if(tokenService.isBlackListed(token)){
+                throw new BusinessException("token已经失效了");
+            }
         }
+
         filterChain.doFilter(request,response);
     }
 }

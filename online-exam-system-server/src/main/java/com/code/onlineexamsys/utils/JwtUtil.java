@@ -116,4 +116,19 @@ public class JwtUtil {
         }
         return null;
     }
+
+    /**
+     * 获取剩余时间
+      * @param token
+     * @return
+     */
+    public long getExpire(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        Date expiration = claims.getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
+    }
 }

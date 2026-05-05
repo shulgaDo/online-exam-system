@@ -14,9 +14,11 @@ import com.code.onlineexamsys.repository.ClassInfoRepository;
 import com.code.onlineexamsys.repository.PermissionRepository;
 import com.code.onlineexamsys.repository.StudentProfileRepository;
 import com.code.onlineexamsys.repository.UserRepository;
+import com.code.onlineexamsys.service.TokenService;
 import com.code.onlineexamsys.service.UserService;
 import com.code.onlineexamsys.utils.EnumUtil;
 import com.code.onlineexamsys.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private StudentProfileRepository studentProfileRepository;
@@ -44,6 +49,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PermissionRepository permissionRepository;
 
+    //TODO 待优化
     @Override
     public LoginResponseVO getLoginInfo(AuthUser authUser) {
         String token = jwtUtil.generateToken(authUser);
@@ -60,5 +66,12 @@ public class UserServiceImpl implements UserService {
         userInfoVO.setRoles(authUser.getRoles());
         userInfoVO.setPermissions(permissionRepository.findPermissionCodesByUserId(id));
         return new LoginResponseVO(token, userInfoVO);
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        long expire = jwtUtil.getExpire(token);
+        tokenService.blacklist(token,expire);
     }
 }

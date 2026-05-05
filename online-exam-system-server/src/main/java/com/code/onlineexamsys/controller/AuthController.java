@@ -9,6 +9,7 @@ import com.code.onlineexamsys.service.UserService;
 import com.code.onlineexamsys.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +46,13 @@ public class AuthController {
         AuthUser authUser = (AuthUser) authenticate.getPrincipal();
         LoginResponseVO loginResponseVO = userService.getLoginInfo(authUser);
         return ApiResponse.success(loginResponseVO);
+    }
+
+    @Operation(description = "用户登出")
+    @PostMapping("/logout")
+    public ApiResponse<?> logout(HttpServletRequest request){
+        userService.logout(request);
+        return ApiResponse.success();
     }
 
 }
